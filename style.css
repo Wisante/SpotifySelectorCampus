@@ -1,0 +1,90 @@
+:root {
+    --bg-color: #121212;
+    --card-bg: #181818;
+    --text-color: #FFFFFF;
+    --accent-color: #1DB954; /* Spotify Green */
+    --hover-bg: #282828;
+    --border-radius: 12px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.dashboard-container {
+    width: 90%;
+    max-width: 600px;
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+header h1 {
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+}
+
+.mood-selector {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 2rem;
+}
+
+.mood-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 12px 15px;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-color);
+    border-radius: 25px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.mood-btn:hover, .mood-btn.active {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);
+}
+
+.player-container {
+    background-color: #000;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    position: relative;
+    min-height: 352px; /* Standard Spotify embed height */
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .mood-selector {
+        justify-content: center;
+    }
+    
+    .mood-btn {
+        flex: 1 1 40%; 
+    }
+}

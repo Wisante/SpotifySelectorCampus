@@ -7,6 +7,31 @@
     <title>Triple Playlist Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Personalización del Scrollbar para navegadores basados en Chrome, Edge y Safari */
+::-webkit-scrollbar {
+    width: 10px; /* Ancho de la barra */
+}
+
+::-webkit-scrollbar-track {
+    background: #121212; /* Color del fondo (igual al body) */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333; /* Color de la barra cuando está quieta */
+    border-radius: 10px;
+    border: 2px solid #121212; /* Crea un pequeño espacio alrededor */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #1DB954; /* Color verde Spotify al pasar el mouse */
+}
+
+/* Compatibilidad para Firefox */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #333 #121212;
+}
+        
         :root {
             --bg-color: #121212;
             --card-bg: #181818;
@@ -355,3 +380,4 @@
 
 
 </html>
+

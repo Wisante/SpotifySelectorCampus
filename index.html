@@ -1,31 +1,356 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Spotify Dashboard</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <title>Triple Playlist Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #181818;
+            --text-color: #FFFFFF;
+            --accent-color: #1DB954;
+            /* Spotify Green */
+            --secondary-text: #B3B3B3;
+            --hover-bg: #282828;
+            --transition-speed: 0.4s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        header {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 2rem;
+            letter-spacing: -0.5px;
+        }
+
+        .view-toggle {
+            background-color: transparent;
+            border: 1px solid var(--secondary-text);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .view-toggle:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        /* Container for the cards */
+        .dashboard-container {
+            width: 100%;
+            max-width: 1200px;
+            min-height: 450px;
+            /* Prevent layout shift during transitions */
+            position: relative;
+        }
+
+        /* GRID VIEW (Default) */
+        .playlist-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            width: 100%;
+            transition: opacity var(--transition-speed) ease;
+        }
+
+        /* COMPACT VIEW */
+        .playlist-compact {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            transition: opacity var(--transition-speed) ease;
+        }
+
+        .playlist-compact .card {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        /* CARD STYLES */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 1rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            /* Init hidden for fade-in */
+            animation: fadeIn 0.6s forwards;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
+            background-color: var(--hover-bg);
+        }
+
+        .card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: var(--text-color);
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        iframe {
+            border-radius: 12px;
+            background-color: #000;
+        }
+
+        /* CONTROLS (Pagination) */
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .nav-btn {
+            background-color: var(--accent-color);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            background-color: #1ed760;
+        }
+
+        .nav-btn:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .page-indicator {
+            font-weight: 600;
+            color: var(--secondary-text);
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-out {
+            opacity: 0 !important;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .playlist-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .playlist-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .controls {
+                gap: 1rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <div class="dashboard-container">
-        <header>
-            <h1>My Moods</h1>
-        </header>
 
-        <div class="mood-selector">
-            <button class="mood-btn" data-mood="coding">Para Programar</button>
-            <button class="mood-btn" data-mood="exams">Exámenes</button>
-            <button class="mood-btn" data-mood="gym">Gym</button>
-            <button class="mood-btn" data-mood="chill">Chill</button>
-        </div>
+    <header>
+        <h1>Triple Playlist Dashboard</h1>
+        <button id="viewToggle" class="view-toggle" onclick="toggleView()">Cambiar a Vista Compacta</button>
+    </header>
 
-        <div class="player-container">
-            <!-- El src se actualizará vía JavaScript -->
-            <iframe id="spotify-player" src="" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-        </div>
+    <div id="contentContainer" class="dashboard-container playlist-grid">
+        <!-- Playlists will be injected here -->
     </div>
 
-    <script src="script.js"></script>
+    <div class="controls">
+        <button id="prevBtn" class="nav-btn" onclick="prevPage()">Anterior</button>
+        <span id="pageIndicator" class="page-indicator">Página 1 de 3</span>
+        <button id="nextBtn" class="nav-btn" onclick="nextPage()">Siguiente</button>
+    </div>
+
+    <script>
+        // CONFIGURACIÓN: Lista de Playlists (9+ Elementos)
+        const playlists = [
+            { name: "Para Programar (Deep Focus)", url: "https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator" },
+            { name: "Lofi Beats", url: "https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator" },
+            { name: "Synthwave para Hackers", url: "https://open.spotify.com/embed/playlist/37i9dQZF1DXdLEN7aqioXM?utm_source=generator" },
+
+            { name: "Gym Beast Mode", url: "https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator" },
+            { name: "Cardio Hits", url: "https://open.spotify.com/embed/playlist/37i9dQZF1DWSJHnPb1f0X3?utm_source=generator" },
+            { name: "Power Workout", url: "https://open.spotify.com/embed/playlist/37i9dQZF1DX802IXs9px9Y?utm_source=generator" },
+
+            { name: "Chill Vibes", url: "https://open.spotify.com/embed/playlist/37i9dQZF1DX4WYpdgoIcn6?utm_source=generator" },
+            { name: "Piano para Estudiar", url: "https://open.spotify.com/embed/playlist/37i9dQZF1DX692WcMWL2yW?utm_source=generator" },
+            { name: "Jazz en el Fondo", url: "https://open.spotify.com/embed/playlist/37i9dQZF1DX0SM0LYsmbMT?utm_source=generator" }
+        ];
+
+        // Estado de la aplicación
+        let currentPage = 1;
+        let itemsPerPage = 3;
+        let isGridView = true;
+
+        // Referencias al DOM
+        const container = document.getElementById('contentContainer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const indicator = document.getElementById('pageIndicator');
+        const viewToggle = document.getElementById('viewToggle');
+
+        // Función Principal de Renderizado
+        function renderPlaylists() {
+            // Animación de salida (opcional para pulido extra, aquí simplificado con fadeIn en cards)
+            container.innerHTML = '';
+
+            const totalItems = playlists.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            // Validar límites de página
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const currentItems = playlists.slice(start, end);
+
+            currentItems.forEach((playlist, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                // Retraso escalonado para efecto cascada
+                card.style.animationDelay = `${index * 0.1}s`;
+
+                // Altura dinámica según vista
+                const height = isGridView ? '352' : '450';
+
+                card.innerHTML = `
+                    <h3>${playlist.name}</h3>
+                    <iframe 
+                        src="${playlist.url}" 
+                        width="100%" 
+                        height="${height}" 
+                        frameBorder="0" 
+                        allowfullscreen="" 
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                        loading="lazy">
+                    </iframe>
+                `;
+                container.appendChild(card);
+            });
+
+            // Actualizar Controles
+            indicator.textContent = `Página ${currentPage} de ${totalPages}`;
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+        }
+
+        // Funciones de Navegación
+        window.nextPage = function () { // Exponer al scope global window
+            const totalPages = Math.ceil(playlists.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                fadeOutAndRender();
+            }
+        };
+
+        window.prevPage = function () {
+            if (currentPage > 1) {
+                currentPage--;
+                fadeOutAndRender();
+            }
+        };
+
+        function fadeOutAndRender() {
+            // Pequeña transición manual
+            container.classList.add('fade-out');
+            setTimeout(() => {
+                renderPlaylists();
+                container.classList.remove('fade-out');
+            }, 200); // 200ms coincide con parte de la transición rápida
+        }
+
+        // Cambio de Vista
+        window.toggleView = function () {
+            isGridView = !isGridView;
+
+            if (isGridView) {
+                container.classList.remove('playlist-compact');
+                container.classList.add('playlist-grid');
+                viewToggle.textContent = 'Cambiar a Vista Compacta';
+                itemsPerPage = 3;
+            } else {
+                container.classList.remove('playlist-grid');
+                container.classList.add('playlist-compact');
+                viewToggle.textContent = 'Cambiar a Vista Cuadrícula';
+                itemsPerPage = 1; // Solo 1 item en compacta
+            }
+
+            // Reiniciar a página 1 para evitar desajustes de índice
+            currentPage = 1;
+            fadeOutAndRender();
+        };
+
+        // Inicialización
+        renderPlaylists();
+
+    </script>
 </body>
+
 </html>
